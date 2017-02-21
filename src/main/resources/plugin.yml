@@ -1,7 +1,22 @@
 name: Warps
 version: ${project.version}
 main: org.github.vectri.warps.Warps
-prefix: Warps
 authors: [vectri]
-description: A simple warps plugin.
+description: A plugin to handle warps.
 website: vectri.github.io
+commands:
+  warp:
+    description: A command to warp to a warp.
+    usage: /warp [personal | group | server] <warp name>
+  warps:
+    description: A command to list a set of warps.
+    usage: /warps [personal | group | server | all]
+  setwarp:
+    description: A command to set a warp.
+    usage: /setwarp [personal | group | server] <warp name>
+  delwarp:
+    description: A command to delete a warp.
+    usage: /delwarp [personal | group | server] <warp name>
+  warpgroup:
+    description: A command to manage group warp permissions.
+    usage: /warpgroup <warp> [add | remove | list] [player]
