@@ -1,0 +1,7 @@
+name: Warps
+version: ${project.version}
+main: org.github.vectri.warps.Warps
+prefix: Warps
+authors: [vectri]
+description: A simple warps plugin.
+website: vectri.github.io
