@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact name="Warps.jar">
+    <output-path>E:/Program Files/Minecraft/server/plugins</output-path>
+    <root id="root">
+      <element id="archive" name="Warps.jar">
+        <element id="module-output" name="Warps" />
+      </element>
+    </root>
+  </artifact>
+</component>
