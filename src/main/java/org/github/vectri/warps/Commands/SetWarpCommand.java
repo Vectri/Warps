@@ -1,6 +1,6 @@
 package org.github.vectri.warps.Commands;
 
-import org.bukkit.Location;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,8 +8,6 @@ import org.bukkit.entity.Player;
 import org.github.vectri.warps.Warp.WarpHandler;
 import org.github.vectri.warps.Warp.WarpType;
 import org.github.vectri.warps.Warps;
-
-import java.util.UUID;
 
 /**
  * A file to handle the /setwarp command.
@@ -20,56 +18,35 @@ public class SetWarpCommand implements CommandExecutor {
     public SetWarpCommand(Warps plugin) {
         warpHandler = new WarpHandler(plugin);
     }
-
-    @Override
+    
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            String arg0 = (args.length != 0) ? args[0] : null;
-            if (arg0 != null) {
-                WarpType warpType = getWarpType(arg0);
-                String warpName = null;
-                if (warpType == null) {
-                    warpType = WarpType.Personal;
-                    warpName = arg0;
-                } else {
-                    String arg1 = (args.length > 0) ? args[1] : null;
-                    if (arg1 != null) {
-                        warpName = arg1;
-                    } else {
-                        sender.sendMessage("You must specify the name of the warp.");
-                    }
-                }
-                if (this.getWarpType(warpName) == null) {
-                    if (!warpHandler.exists(warpType, warpName)) {
-                        Player player = (Player) sender;
-                        warpHandler.create(warpType, player.getUniqueId(), warpName, player.getLocation());
-                        sender.sendMessage("Successfully created " + warpType.name().toLowerCase() + " warp, " + warpName + "!");
-                    } else {
-                        sender.sendMessage("Warp name already exists! Please choose another name.");
-                    }
-                } else {
-                    sender.sendMessage("You cannot name a warp with a reserved keyword.");
-                }
+        WarpType warpType = WarpType.get(args[0]);
+        String warpName = "";
+        if (args.length == 1) {
+            if (warpType != null) {
+                sender.sendMessage(ChatColor.RED + "You must specify the name of the warp.");
                 return true;
             }
+            warpType = WarpType.Personal;
+            warpName = args[0];
+        } else if (args.length == 2) {
+            if (warpType == null) {
+                sender.sendMessage(ChatColor.RED + "You must specify a valid warp type. (Personal, Group, Server)");
+                return true;
+            }
+            warpName = args[1];
         }
-        return false;
-    }
-
-    private WarpType getWarpType(String type) {
-        type = type.toLowerCase();
-        switch (type) {
-            case "p":
-            case "personal":
-                return WarpType.Personal;
-            case "g":
-            case "group":
-                return WarpType.Group;
-            case "s":
-            case "server":
-                return WarpType.Server;
-            default:
-                return null;
+        if (WarpType.get(warpName) != null) {   // A return of null means the keyword is not reserved.
+            sender.sendMessage(ChatColor.RED + "You cannot name a warp with a reserved keyword.");
+            return true;
         }
+        if (warpHandler.exists(warpType, warpName)) {
+            sender.sendMessage(ChatColor.RED + "Warp name already exists! Please choose another name.");
+            return true;
+        }
+        Player player = (Player) sender;
+        warpHandler.create(warpType, player.getUniqueId(), warpName, player.getLocation());
+        sender.sendMessage(ChatColor.GREEN + "Successfully created " + warpType.name().toLowerCase() + " warp, " + warpName + "!");
+        return true;
     }
 }
