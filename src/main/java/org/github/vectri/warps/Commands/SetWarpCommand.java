@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.github.vectri.warps.Warp.WarpHandler;
 import org.github.vectri.warps.Warp.WarpType;
-import org.github.vectri.warps.Warps;
 
 /**
  * A file to handle the /setwarp command.

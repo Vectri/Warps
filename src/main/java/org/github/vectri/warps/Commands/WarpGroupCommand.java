@@ -7,9 +7,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.github.vectri.warps.Warp.Warp;
+import org.github.vectri.warps.Warp.WarpGroup;
 import org.github.vectri.warps.Warp.WarpHandler;
 import org.github.vectri.warps.Warp.WarpType;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -52,10 +55,22 @@ public class WarpGroupCommand implements CommandExecutor {
             return false;
         }
         if (!WarpHandler.exists(WarpType.Group, args[0])) {
-            sender.sendMessage(ChatColor.RED + "Warp " + args[0] + " does not exist.");
+            sender.sendMessage(ChatColor.RED + "Warp " + args[0] + " does not exist or is not a group warp.");
+            return true;
         }
+        WarpGroup warpGroup = WarpHandler.get(args[0]);
+        ArrayList<UUID> members = warpGroup.getMembers();
         if (mode == 2) {
-            // TODO: List players in a warp group.
+            String memberList = "List of members in " + warpGroup.getName() + ": ";
+            for (UUID member : members) {
+                if (members.indexOf(member) == members.size() - 1) {
+                    memberList += Bukkit.getOfflinePlayer(member).getName() + ".";
+                    continue;
+                }
+                memberList += Bukkit.getOfflinePlayer(member).getName() + ", ";
+            }
+            sender.sendMessage(memberList);
+            return true;
         }
         UUID targetUUID = null;
         for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
@@ -65,6 +80,28 @@ public class WarpGroupCommand implements CommandExecutor {
         }
         if (targetUUID == null) {
             sender.sendMessage(ChatColor.RED + "The specified player " + args[2] + " is not a valid player.");
+            return true;
+        }
+        if (mode == 0) {
+            for (UUID member : members) {
+                if (member == targetUUID) {
+                    sender.sendMessage(ChatColor.RED + "That player is already a member of " + warpGroup.getName() + "!");
+                    return true;
+                }
+            }
+            warpGroup.addMember(targetUUID);
+            sender.sendMessage(ChatColor.GREEN + args[2] + " was successfully added as a member of " + warpGroup.getName() + "!");
+            return true;
+        }
+        if (mode == 1) {
+            for (UUID member : members) {
+                if (member == targetUUID) {
+                    warpGroup.removeMember(targetUUID);
+                    sender.sendMessage(ChatColor.RED + args[2] + " was successfully removed from " + warpGroup.getName() + "!");
+                    return true;
+                }
+            }
+            sender.sendMessage(ChatColor.RED + "That player is not a member of " + warpGroup.getName() + "!");
             return true;
         }
         return true;

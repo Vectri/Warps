@@ -9,15 +9,19 @@ import java.util.UUID;
  * A file that extends Warps to add group functionality.
  */
 public class WarpGroup extends Warp {
-    ArrayList<UUID> members = new ArrayList<>();
+    private ArrayList<UUID> members = new ArrayList<>();
 
-    public WarpGroup(WarpType type, UUID owner, String name, Location location, ArrayList<UUID> members) {
+    WarpGroup(WarpType type, UUID owner, String name, Location location, ArrayList<UUID> members) {
         super(type, owner, name, location);
         this.members = members;
     }
 
     public ArrayList<UUID> getMembers() {
         return members;
+    }
+
+    public boolean addMember(UUID member) {
+        return members.add(member);
     }
 
     public boolean removeMember(UUID member) {
