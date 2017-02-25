@@ -15,13 +15,13 @@ public final class Warps extends JavaPlugin {
     public void onEnable() {
         this.getCommand("warp").setExecutor(new WarpCommand());
         this.getCommand("warps").setExecutor(new WarpsCommand());
-        this.getCommand("setwarp").setExecutor(new SetWarpCommand(this));
+        this.getCommand("setwarp").setExecutor(new SetWarpCommand());
         this.getCommand("delwarp").setExecutor(new DelWarpCommand());
         this.getCommand("warpgroup").setExecutor(new WarpGroupCommand());
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        // TODO: Save config stuff.
     }
 }

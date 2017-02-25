@@ -7,32 +7,32 @@ import java.util.UUID;
 /**
  * A file to handle individual warp data.
  */
-class Warp {
+public class Warp {
     private WarpType type;
     private UUID owner;
     private String name;
     private Location location;
 
-    Warp (WarpType type, UUID owner, String name, Location location) {
+    public Warp (WarpType type, UUID owner, String name, Location location) {
         this.owner = owner;
         this.type = type;
         this.name = name;
         this.location = location;
     }
 
-    WarpType getType() {
+    public WarpType getType() {
         return type;
     }
 
-    UUID getOwner() {
+    public UUID getOwner() {
         return owner;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    Location getLocation() {
+    public Location getLocation() {
         return location;
     }
 }
