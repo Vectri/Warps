@@ -13,7 +13,6 @@ import org.github.vectri.warps.Warp.WarpType;
  * A file to handle the /delwarp command.
  */
 public class DelWarpCommand implements CommandExecutor {
-    private WarpHandler warpHandler;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -49,10 +48,10 @@ public class DelWarpCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot specify a warp with a reserved keyword.");
             return true;
         }
-        if (warpHandler.exists(warpType, warpName)) {
-            Warp warp = warpHandler.get(warpType, warpName);
-            sender.sendMessage("You deleted " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
-            warpHandler.delete(warpType, warpName);
+        if (WarpHandler.exists(warpType, warpName)) {
+            Warp warp = WarpHandler.get(warpType, warpName);
+            sender.sendMessage(ChatColor.GREEN + "You deleted " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
+            WarpHandler.delete(warpType, warpName);
         } else {
             sender.sendMessage(ChatColor.RED + "That warp does not exist!");
         }

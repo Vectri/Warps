@@ -13,8 +13,6 @@ import org.github.vectri.warps.Warps;
  * A file to handle the /setwarp command.
  */
 public class SetWarpCommand implements CommandExecutor {
-    private WarpHandler warpHandler;
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -49,12 +47,12 @@ public class SetWarpCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot name a warp with a reserved keyword.");
             return true;
         }
-        if (warpHandler.exists(warpType, warpName)) {
+        if (WarpHandler.exists(warpType, warpName)) {
             sender.sendMessage(ChatColor.RED + "Warp name already exists! Please choose another name.");
             return true;
         }
         Player player = (Player) sender;
-        warpHandler.create(warpType, player.getUniqueId(), warpName, player.getLocation());
+        WarpHandler.create(warpType, player.getUniqueId(), warpName, player.getLocation());
         sender.sendMessage(ChatColor.GREEN + "Successfully created " + warpType.name().toLowerCase() + " warp, " + warpName + "!");
         return true;
     }

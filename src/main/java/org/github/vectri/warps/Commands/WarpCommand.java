@@ -13,8 +13,6 @@ import org.github.vectri.warps.Warp.WarpType;
  * A file to handle the /warp command.
  */
 public class WarpCommand implements CommandExecutor {
-    private WarpHandler warpHandler;
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -49,8 +47,8 @@ public class WarpCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot specify a warp with a reserved keyword.");
             return true;
         }
-        if (warpHandler.exists(warpType, warpName)) {
-            Warp warp = warpHandler.get(warpType, warpName);
+        if (WarpHandler.exists(warpType, warpName)) {
+            Warp warp = WarpHandler.get(warpType, warpName);
             Player player = (Player) sender;
             player.teleport(warp.getLocation());
             sender.sendMessage("You teleported to " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
