@@ -15,10 +15,6 @@ import org.github.vectri.warps.Warp.WarpType;
 public class WarpCommand implements CommandExecutor {
     private WarpHandler warpHandler;
 
-    public WarpCommand() {
-        warpHandler = new WarpHandler();
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -27,11 +23,11 @@ public class WarpCommand implements CommandExecutor {
         }
         if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Too few arguments.");
-            return true;
+            return false;
         }
         if (args.length > 2) {
             sender.sendMessage(ChatColor.RED + "Too many arguments.");
-            return true;
+            return false;
         }
         WarpType warpType = WarpType.get(args[0]);
         String warpName = "";
@@ -54,12 +50,12 @@ public class WarpCommand implements CommandExecutor {
             return true;
         }
         if (warpHandler.exists(warpType, warpName)) {
-            Warp warp = warpHandler.getWarp(warpType, warpName);
+            Warp warp = warpHandler.get(warpType, warpName);
             Player player = (Player) sender;
             player.teleport(warp.getLocation());
-            sender.sendMessage(ChatColor.RED + "You teleported to " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
+            sender.sendMessage("You teleported to " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
         } else {
-            sender.sendMessage(ChatColor.RED + "That warp does not exist! Why not create it?");
+            sender.sendMessage(ChatColor.RED + "That warp does not exist!");
         }
         return true;
     }
