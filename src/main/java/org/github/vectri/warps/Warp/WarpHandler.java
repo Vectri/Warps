@@ -12,15 +12,9 @@ import java.util.UUID;
  * A file to handle warps held in RAM.
  */
 public class WarpHandler {
-    private final Warps plugin;
-
     private static ArrayList<Warp> personalWarps = new ArrayList<>();
     private static ArrayList<Warp> groupWarps = new ArrayList<>();
     private static ArrayList<Warp> serverWarps = new ArrayList<>();
-
-    public WarpHandler(Warps plugin) {
-        this.plugin = plugin;
-    }
 
     private ArrayList getArrayByWarpType(WarpType type) {
         switch (type) {
@@ -59,9 +53,16 @@ public class WarpHandler {
         ArrayList<Warp> warpsArray = this.getArrayByWarpType(type);
         if (!this.exists(warpsArray, name)) {
             warpsArray.add(new Warp(type, owner, name, location));
-            for (Warp warp : warpsArray) {
-                plugin.getLogger().info(warp.getName());
+        }
+    }
+
+    public Warp getWarp(WarpType type, String name) {
+        ArrayList<Warp> warpsArray = this.getArrayByWarpType(type);
+        for (Warp warp : warpsArray) {
+            if (warp.getName().equalsIgnoreCase(name)) {
+                return warp;
             }
         }
+        return null;
     }
 }
