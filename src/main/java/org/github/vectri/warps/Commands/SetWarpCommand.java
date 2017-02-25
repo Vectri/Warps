@@ -15,11 +15,24 @@ import org.github.vectri.warps.Warps;
 public class SetWarpCommand implements CommandExecutor {
     private WarpHandler warpHandler;
 
-    public SetWarpCommand(Warps plugin) {
-        warpHandler = new WarpHandler(plugin);
+    public SetWarpCommand() {
+        warpHandler = new WarpHandler();
     }
-    
+
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("Command cannot be run from console.");
+            return true;
+        }
+        if (args.length == 0) {
+            sender.sendMessage(ChatColor.RED + "Too few arguments.");
+            return true;
+        }
+        if (args.length > 2) {
+            sender.sendMessage(ChatColor.RED + "Too many arguments.");
+            return true;
+        }
         WarpType warpType = WarpType.get(args[0]);
         String warpName = "";
         if (args.length == 1) {
