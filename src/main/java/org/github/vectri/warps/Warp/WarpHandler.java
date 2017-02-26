@@ -15,8 +15,8 @@ public class WarpHandler {
     private static ArrayList<WarpGroup> groupWarps = new ArrayList<>();
     private static ArrayList<Warp> serverWarps = new ArrayList<>();
 
-    public static ArrayList getList(WarpType type) {
-        switch (type) {
+    public static ArrayList getList(WarpType warpType) {
+        switch (warpType) {
             case Personal:
                 return personalWarps;
             case Group:
@@ -27,10 +27,19 @@ public class WarpHandler {
         return null;
     }
 
+    protected static boolean setList(WarpType type, ArrayList warpArray) {
+        ArrayList overrideArray = getList(type);
+        if (overrideArray != null) {
+            overrideArray.addAll(warpArray);
+            return true;
+        }
+        return false;
+    }
+
     public static ArrayList<Warp> getPlayerList(Player player, ArrayList<Warp> warpArray) {
         ArrayList<Warp> playerWarps = new ArrayList<>();
         for (Warp warp : warpArray) {
-            if (warp.getOwner() == player.getUniqueId()) {
+            if (warp.getOwner().equals(player.getUniqueId())) {
                 playerWarps.add(warp);
             }
         }
@@ -40,7 +49,7 @@ public class WarpHandler {
     public static ArrayList<WarpGroup> getPlayerMembershipList(Player player) {
         ArrayList<WarpGroup> playerWarps = new ArrayList<>();
         for (WarpGroup warpGroup : groupWarps) {
-            if (warpGroup.getMembers().contains(player.getUniqueId()) && warpGroup.getOwner() != player.getUniqueId()) {
+            if (warpGroup.getMembers().contains(player.getUniqueId()) && !warpGroup.getOwner().equals(player.getUniqueId())) {
                 playerWarps.add(warpGroup);
             }
         }

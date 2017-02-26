@@ -27,4 +27,8 @@ public class WarpGroup extends Warp {
     public boolean removeMember(UUID member) {
         return members.remove(member);
     }
+
+    public Warp toWarp() {
+        return this;
+    }
 }

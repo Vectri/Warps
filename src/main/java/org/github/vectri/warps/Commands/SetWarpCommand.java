@@ -1,6 +1,7 @@
 package org.github.vectri.warps.Commands;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -51,7 +52,13 @@ public class SetWarpCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        WarpHandler.create(warpType, player.getUniqueId(), warpName, player.getLocation());
+        Location playerLocation = player.getLocation();
+        double playerX = playerLocation.getX();
+        double playerY = playerLocation.getY();
+        double playerZ = playerLocation.getZ();
+        float playerYaw = Math.round(playerLocation.getYaw() / 90) * 90;
+        Location warpLocation = new Location(playerLocation.getWorld(), playerX, playerY, playerZ, playerYaw, 0);
+        WarpHandler.create(warpType, player.getUniqueId(), warpName, warpLocation);
         sender.sendMessage(ChatColor.GREEN + "Successfully created " + warpType.name().toLowerCase() + " warp, " + warpName + "!");
         return true;
     }

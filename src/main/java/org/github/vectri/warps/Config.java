@@ -22,13 +22,9 @@ public class Config {
         configFile = new File(plugin.getDataFolder(), fileName);
     }
 
-    public void reloadConfig() {
-        fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
-    }
-
     public FileConfiguration getConfig() {
         if (fileConfiguration == null) {
-            this.reloadConfig();
+            fileConfiguration = YamlConfiguration.loadConfiguration(configFile);
         }
         return fileConfiguration;
     }
