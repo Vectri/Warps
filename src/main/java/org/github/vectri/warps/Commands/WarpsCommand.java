@@ -1,12 +1,12 @@
 package org.github.vectri.warps.Commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.github.vectri.warps.Warp.Warp;
+import org.github.vectri.warps.Warp.WarpGroup;
 import org.github.vectri.warps.Warp.WarpHandler;
 import org.github.vectri.warps.Warp.WarpType;
 
@@ -35,20 +35,47 @@ public class WarpsCommand implements CommandExecutor {
         ArrayList<Warp> warpArray = WarpHandler.getList(warpType);
         Player player = (Player) sender;
         String list = "List of " + warpType.name().toLowerCase() + " warps: ";
-        if (warpArray.isEmpty()) {
-            list += "None.";
-        } else {
-            for (Warp warp : warpArray) {
-                if (warp.getOwner() == player.getUniqueId()) {
-                    if (warpArray.indexOf(warp) == warpArray.size() - 1) {
+        String membershipList = "List of " + warpType.name().toLowerCase() + " warps that you have membership to: ";
+        if (warpType == WarpType.Personal) {
+            ArrayList<Warp> playerWarps = WarpHandler.getPlayerList(player, warpArray);
+            for (Warp warp : playerWarps) {
+                    if (playerWarps.indexOf(warp) == playerWarps.size() - 1) {
                         list += warp.getName() + ".";
                         continue;
                     }
                     list += warp.getName() + ", ";
+            }
+        } else if (warpType == WarpType.Group) {
+            ArrayList<Warp> playerWarps = WarpHandler.getPlayerList(player, warpArray);
+            for (Warp warp : playerWarps) {
+                if (playerWarps.indexOf(warp) == playerWarps.size() - 1) {
+                    list += warp.getName() + ".";
+                    continue;
                 }
+                list += warp.getName() + ", ";
+            }
+            ArrayList<WarpGroup> membershipWarps = WarpHandler.getPlayerMembershipList(player);
+            for (WarpGroup warpGroup : membershipWarps) {
+                if (warpArray.indexOf(warpGroup) == warpArray.size() - 1) {
+                    membershipList += warpGroup.getName() + ".";
+                    continue;
+                }
+                membershipList += warpGroup.getName() + ", ";
+            }
+        } else if (warpType == WarpType.Server) {
+            for (Warp warp : warpArray) {
+                if (warpArray.indexOf(warp) == warpArray.size() - 1) {
+                    list += warp.getName() + ".";
+                    continue;
+                }
+                list += warp.getName() + ", ";
             }
         }
-        sender.sendMessage(list);
+        if (warpType == WarpType.Group) {
+            sender.sendMessage(new String[]{list, membershipList});
+        } else {
+            sender.sendMessage(list);
+        }
         return true;
     }
 }

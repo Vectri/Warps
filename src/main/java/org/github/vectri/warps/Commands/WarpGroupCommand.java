@@ -62,12 +62,16 @@ public class WarpGroupCommand implements CommandExecutor {
         ArrayList<UUID> members = warpGroup.getMembers();
         if (mode == 2) {
             String memberList = "List of members in " + warpGroup.getName() + ": ";
-            for (UUID member : members) {
-                if (members.indexOf(member) == members.size() - 1) {
-                    memberList += Bukkit.getOfflinePlayer(member).getName() + ".";
-                    continue;
+            if (members.isEmpty()) {
+                memberList += "None.";
+            } else {
+                for (UUID member : members) {
+                    if (members.indexOf(member) == members.size() - 1) {
+                        memberList += Bukkit.getOfflinePlayer(member).getName() + ".";
+                        continue;
+                    }
+                    memberList += Bukkit.getOfflinePlayer(member).getName() + ", ";
                 }
-                memberList += Bukkit.getOfflinePlayer(member).getName() + ", ";
             }
             sender.sendMessage(memberList);
             return true;
@@ -96,6 +100,10 @@ public class WarpGroupCommand implements CommandExecutor {
         if (mode == 1) {
             for (UUID member : members) {
                 if (member == targetUUID) {
+                    if (member == ((Player) sender).getUniqueId()) {
+                        sender.sendMessage(ChatColor.RED + "You cannot remove yourself from the group.");
+                        return true;
+                    }
                     warpGroup.removeMember(targetUUID);
                     sender.sendMessage(ChatColor.RED + args[2] + " was successfully removed from " + warpGroup.getName() + "!");
                     return true;

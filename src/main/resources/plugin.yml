@@ -10,7 +10,7 @@ commands:
     usage: /warp [personal | group | server] <warp name>
   warps:
     description: A command to list a set of warps.
-    usage: /warps [personal | group | server | all]
+    usage: /warps [personal | group | server]
   setwarp:
     description: A command to set a warp.
     usage: /setwarp [personal | group | server] <warp name>

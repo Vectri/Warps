@@ -2,10 +2,7 @@ package org.github.vectri.warps.Warp;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.github.vectri.warps.Warps;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -18,7 +15,7 @@ public class WarpHandler {
     private static ArrayList<WarpGroup> groupWarps = new ArrayList<>();
     private static ArrayList<Warp> serverWarps = new ArrayList<>();
 
-    private static ArrayList getArrayByWarpType(WarpType type) {
+    public static ArrayList getList(WarpType type) {
         switch (type) {
             case Personal:
                 return personalWarps;
@@ -28,6 +25,26 @@ public class WarpHandler {
                 return serverWarps;
         }
         return null;
+    }
+
+    public static ArrayList<Warp> getPlayerList(Player player, ArrayList<Warp> warpArray) {
+        ArrayList<Warp> playerWarps = new ArrayList<>();
+        for (Warp warp : warpArray) {
+            if (warp.getOwner() == player.getUniqueId()) {
+                playerWarps.add(warp);
+            }
+        }
+        return playerWarps;
+    }
+
+    public static ArrayList<WarpGroup> getPlayerMembershipList(Player player) {
+        ArrayList<WarpGroup> playerWarps = new ArrayList<>();
+        for (WarpGroup warpGroup : groupWarps) {
+            if (warpGroup.getMembers().contains(player.getUniqueId()) && warpGroup.getOwner() != player.getUniqueId()) {
+                playerWarps.add(warpGroup);
+            }
+        }
+        return playerWarps;
     }
 
     private static Warp get(ArrayList<Warp> warpArray, String name) {
@@ -49,7 +66,7 @@ public class WarpHandler {
     }
 
     public static Warp get(WarpType type, String name) {
-        ArrayList warpsArray = getArrayByWarpType(type);
+        ArrayList warpsArray = getList(type);
         return get(warpsArray, name);
     }
 
@@ -59,7 +76,7 @@ public class WarpHandler {
 
     public static void create(WarpType type, UUID owner, String name, Location location) {
         if (!exists(type, name)) {
-            ArrayList warpsArray = getArrayByWarpType(type);
+            ArrayList warpsArray = getList(type);
             if (type == WarpType.Group) {
                 ArrayList<UUID> members = new ArrayList<>();
                 members.add(owner);
@@ -81,7 +98,7 @@ public class WarpHandler {
     public static boolean delete(WarpType type, String name) {
         Warp warp = get(type, name);
         if (warp != null) {
-            ArrayList warpsArray = getArrayByWarpType(type);
+            ArrayList warpsArray = getList(type);
             try {
                 warpsArray.remove(warp);
             } catch (NullPointerException e) {
