@@ -4,10 +4,17 @@ main: org.github.vectri.warps.Warps
 authors: [vectri]
 description: A plugin to handle warps.
 website: vectri.github.io
+permissions:
+  warp.setwarp.personal:
+    default: true
+  warp.setwarp.group:
+    default: true
+  warp.setwarp.server:
+    default: op
 commands:
   warp:
     description: A command to warp to a warp.
-    usage: /warp [personal | group | server] <warp name>
+    usage: /warp [personal | group | server] [group warp owner's name] <warp name>
   warps:
     description: A command to list a set of warps.
     usage: /warps [personal | group | server]

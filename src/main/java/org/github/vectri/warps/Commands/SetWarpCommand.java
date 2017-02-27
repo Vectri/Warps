@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.github.vectri.warps.Warp.WarpHandler;
 import org.github.vectri.warps.Warp.WarpType;
 
+import java.util.UUID;
+
 /**
  * A file to handle the /setwarp command.
  */
@@ -28,6 +30,10 @@ public class SetWarpCommand implements CommandExecutor {
             return false;
         }
         WarpType warpType = WarpType.get(args[0]);
+        if (warpType == WarpType.Server && !sender.hasPermission("warp.setwarp.server")) {
+                sender.sendMessage(ChatColor.RED + "You do not have permission to create a server warp.");
+                return true;
+        }
         String warpName = "";
         if (args.length == 1) {
             if (warpType != null) {
@@ -47,11 +53,12 @@ public class SetWarpCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot name a warp with a reserved keyword.");
             return true;
         }
-        if (WarpHandler.exists(warpType, warpName)) {
+        Player player = (Player) sender;
+        UUID playerUUID = ((Player) sender).getUniqueId();
+        if (WarpHandler.exists(warpType, warpName, playerUUID)) {
             sender.sendMessage(ChatColor.RED + "Warp name already exists! Please choose another name.");
             return true;
         }
-        Player player = (Player) sender;
         Location playerLocation = player.getLocation();
         double playerX = playerLocation.getX();
         double playerY = playerLocation.getY();

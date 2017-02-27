@@ -9,6 +9,8 @@ import org.github.vectri.warps.Warp.Warp;
 import org.github.vectri.warps.Warp.WarpHandler;
 import org.github.vectri.warps.Warp.WarpType;
 
+import java.util.UUID;
+
 /**
  * A file to handle the /delwarp command.
  */
@@ -48,10 +50,12 @@ public class DelWarpCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot specify a warp with a reserved keyword.");
             return true;
         }
-        if (WarpHandler.exists(warpType, warpName)) {
-            Warp warp = WarpHandler.get(warpType, warpName);
+        Player player = (Player) sender;
+        UUID playerUUID = player.getUniqueId();
+        Warp warp = WarpHandler.get(warpType, warpName, playerUUID);
+        if (warp != null) {
             sender.sendMessage(ChatColor.GREEN + "You deleted " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
-            WarpHandler.delete(warpType, warpName);
+            WarpHandler.delete(warpType, warpName, playerUUID);
         } else {
             sender.sendMessage(ChatColor.RED + "That warp does not exist!");
         }

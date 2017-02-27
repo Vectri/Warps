@@ -39,7 +39,7 @@ public class WarpHandler {
     public static ArrayList<Warp> getPlayerList(Player player, ArrayList<Warp> warpArray) {
         ArrayList<Warp> playerWarps = new ArrayList<>();
         for (Warp warp : warpArray) {
-            if (warp.getOwner().equals(player.getUniqueId())) {
+            if (warp.getOwner().equals(player.getUniqueId()) || warp.getType() == WarpType.Server) {
                 playerWarps.add(warp);
             }
         }
@@ -56,35 +56,34 @@ public class WarpHandler {
         return playerWarps;
     }
 
-    private static Warp get(ArrayList<Warp> warpArray, String name) {
+    private static Warp get(ArrayList<Warp> warpArray, String name, UUID playerUUID) {
         for (Warp warp : warpArray) {
-            if (warp.getName().equalsIgnoreCase(name)) {
+            if (warp.getName().equalsIgnoreCase(name) && (warp.getOwner().equals(playerUUID) || warp.getType() == WarpType.Server)) {
                 return warp;
             }
         }
         return null;
     }
 
-    public static WarpGroup get(String name) {
+    public static WarpGroup get(String name, UUID playerUUID) {
         for (WarpGroup warpGroup : groupWarps) {
-            if (warpGroup.getName().equalsIgnoreCase(name)) {
+            if (warpGroup.getName().equalsIgnoreCase(name) && warpGroup.getOwner().equals(playerUUID)) {
                 return warpGroup;
             }
         }
         return null;
     }
 
-    public static Warp get(WarpType type, String name) {
+    public static Warp get(WarpType type, String name, UUID playerUUID) {
         ArrayList warpsArray = getList(type);
-        return get(warpsArray, name);
+        return get(warpsArray, name, playerUUID);
     }
 
-    public static boolean exists(WarpType type, String name) {
-        return (get(type, name) != null);
+    public static boolean exists(WarpType type, String name, UUID playerUUID) {
+        return (get(type, name, playerUUID) != null);
     }
 
     public static void create(WarpType type, UUID owner, String name, Location location) {
-        if (!exists(type, name)) {
             ArrayList warpsArray = getList(type);
             if (type == WarpType.Group) {
                 ArrayList<UUID> members = new ArrayList<>();
@@ -101,15 +100,15 @@ public class WarpHandler {
                     Bukkit.getLogger().severe("Error adding warp:" + e.getMessage());
                 }
             }
-        }
     }
 
-    public static boolean delete(WarpType type, String name) {
-        Warp warp = get(type, name);
+    public static boolean delete(WarpType type, String name, UUID playerUUID) {
+        Warp warp = get(type, name, playerUUID);
         if (warp != null) {
             ArrayList warpsArray = getList(type);
             try {
                 warpsArray.remove(warp);
+                WarpConfig.removeWarp(warp);
             } catch (NullPointerException e) {
                 Bukkit.getLogger().severe("Error removing warp:" + e.getMessage());
             }

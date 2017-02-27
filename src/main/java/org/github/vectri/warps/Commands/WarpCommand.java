@@ -9,6 +9,9 @@ import org.github.vectri.warps.Warp.Warp;
 import org.github.vectri.warps.Warp.WarpHandler;
 import org.github.vectri.warps.Warp.WarpType;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 /**
  * A file to handle the /warp command.
  */
@@ -23,7 +26,7 @@ public class WarpCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "Too few arguments.");
             return false;
         }
-        if (args.length > 2) {
+        if (args.length > 3) {
             sender.sendMessage(ChatColor.RED + "Too many arguments.");
             return false;
         }
@@ -47,11 +50,24 @@ public class WarpCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You cannot specify a warp with a reserved keyword.");
             return true;
         }
-        if (WarpHandler.exists(warpType, warpName)) {
-            Warp warp = WarpHandler.get(warpType, warpName);
-            Player player = (Player) sender;
+        Player player = (Player) sender;
+        UUID playerUUID = player.getUniqueId();
+        if (args.length == 3) {
+            warpName = args[2];
+            for (Warp warp : WarpHandler.getPlayerMembershipList(player)) {
+                if (warp.getName().equalsIgnoreCase(warpName)) {
+                    player.teleport(warp.getLocation());
+                    sender.sendMessage(ChatColor.GREEN + "You teleported to " + args[1] + "'s " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
+                    return true;
+                }
+            }
+            sender.sendMessage(ChatColor.RED + "Warp not found or you are not a member of the specified warp!");
+            return true;
+        }
+        Warp warp = WarpHandler.get(warpType, warpName, playerUUID);
+        if (warp != null) {
             player.teleport(warp.getLocation());
-            sender.sendMessage("You teleported to " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
+            sender.sendMessage(ChatColor.GREEN + "You teleported to " + warp.getType().name().toLowerCase() + " warp, " + warp.getName() + "!");
         } else {
             sender.sendMessage(ChatColor.RED + "That warp does not exist!");
         }

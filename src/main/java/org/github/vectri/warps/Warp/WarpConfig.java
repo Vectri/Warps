@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.github.vectri.warps.Config;
 import org.github.vectri.warps.Warps;
-import sun.java2d.windows.GDIRenderer;
 
 import java.util.*;
 
@@ -13,20 +12,23 @@ import java.util.*;
  * Handles saving and loading warps to and from a file.
  */
 public class WarpConfig {
-    private Config warpConfig;
+    private static Config warpConfig;
 
-    private ArrayList<Warp> personalWarps = new ArrayList<>();
-    private ArrayList<WarpGroup> groupWarps = new ArrayList<>();
-    private ArrayList<Warp> serverWarps = new ArrayList<>();
+    private static ArrayList<Warp> personalWarps = new ArrayList<>();
+    private static ArrayList<WarpGroup> groupWarps = new ArrayList<>();
+    private static ArrayList<Warp> serverWarps = new ArrayList<>();
+    private static ArrayList<Warp> removeWarps = new ArrayList<>();
 
     public WarpConfig(Warps plugin) {
         warpConfig = new Config(plugin, "data.yml");
     }
 
     public void load() {
-        this.loadWarps(WarpType.Personal);
-        this.loadWarps(WarpType.Server);
-        this.loadWarps(WarpType.Group);
+        if (warpConfig.getConfigFile().exists() && (warpConfig.getConfigFile().length() != 0)) {
+            this.loadWarps(WarpType.Personal);
+            this.loadWarps(WarpType.Server);
+            this.loadWarps(WarpType.Group);
+        }
     }
 
     public void save() {
@@ -36,6 +38,9 @@ public class WarpConfig {
         this.saveWarps(WarpType.Personal, personalWarps);
         this.saveGroupWarps(groupWarps);
         this.saveWarps(WarpType.Server, serverWarps);
+        for (Warp warp : removeWarps) {
+            warpConfig.getConfig().set(warp.getType().name().toLowerCase() + "." + warp.getOwner() + "." + warp.getName(), null);
+        }
         warpConfig.saveConfig();
     }
 
@@ -66,9 +71,12 @@ public class WarpConfig {
 
     private void loadWarps(WarpType warpType) {
         String type = warpType.name().toLowerCase();
+        if (warpConfig.getConfig().getConfigurationSection(type) == null) {
+            return;
+        }
         for (Object player : warpConfig.getConfig().getConfigurationSection(type).getKeys(false)) {
             for (Object warp : warpConfig.getConfig().getConfigurationSection(type + "." + player).getKeys(false)) {
-                List locationString = warpConfig.getConfig().getList(type + "." + player + "." + warp + ".location");
+//                List locationString = warpConfig.getConfig().getList(type + "." + player + "." + warp + ".location");
                 String ownerString = player.toString();
                 UUID owner = UUID.fromString(ownerString);
                 String warpName = warp.toString();
@@ -103,5 +111,9 @@ public class WarpConfig {
         } else if (warpType == WarpType.Group) {
             WarpHandler.setList(warpType, groupWarps);
         }
+    }
+
+    public static void removeWarp(Warp warp) {
+        removeWarps.add(warp);
     }
 }

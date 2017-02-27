@@ -35,41 +35,41 @@ public class WarpsCommand implements CommandExecutor {
         }
         ArrayList<Warp> warpArray = WarpHandler.getList(warpType);
         Player player = (Player) sender;
-        String list = "List of " + warpType.name().toLowerCase() + " warps: ";
-        String membershipList = "List of " + warpType.name().toLowerCase() + " warps that you have membership to: ";
+        String list = "List of " + ChatColor.GREEN + warpType.name().toLowerCase() + ChatColor.RESET + " warps: ";
+        String membershipList = "List of " + ChatColor.GREEN + warpType.name().toLowerCase() + ChatColor.RESET + " warps that you have membership to: ";
         if (warpType == WarpType.Personal) {
             ArrayList<Warp> playerWarps = WarpHandler.getPlayerList(player, warpArray);
             for (Warp warp : playerWarps) {
                     if (playerWarps.indexOf(warp) == playerWarps.size() - 1) {
-                        list += warp.getName() + ".";
+                        list += ChatColor.GREEN + warp.getName() + ChatColor.RESET + ".";
                         continue;
                     }
-                    list += warp.getName() + ", ";
+                    list += ChatColor.GREEN + warp.getName() + ChatColor.RESET + ", ";
             }
         } else if (warpType == WarpType.Group) {
             ArrayList<Warp> playerWarps = WarpHandler.getPlayerList(player, warpArray);
             for (Warp warp : playerWarps) {
                 if (playerWarps.indexOf(warp) == playerWarps.size() - 1) {
-                    list += warp.getName() + ".";
+                    list += ChatColor.GREEN + warp.getName() + ChatColor.RESET + ".";
                     continue;
                 }
-                list += warp.getName() + ", ";
+                list += ChatColor.GREEN + warp.getName() + ChatColor.RESET + ", ";
             }
             ArrayList<WarpGroup> membershipWarps = WarpHandler.getPlayerMembershipList(player);
             for (WarpGroup warpGroup : membershipWarps) {
                 if (warpArray.indexOf(warpGroup) == warpArray.size() - 1) {
-                    membershipList += warpGroup.getName() + ".";
+                    membershipList += ChatColor.GREEN + warpGroup.getName() + ChatColor.RESET + ".";
                     continue;
                 }
-                membershipList += warpGroup.getName() + ", ";
+                membershipList += ChatColor.GREEN + warpGroup.getName() + ChatColor.RESET + ", ";
             }
         } else if (warpType == WarpType.Server) {
             for (Warp warp : warpArray) {
                 if (warpArray.indexOf(warp) == warpArray.size() - 1) {
-                    list += warp.getName() + ".";
+                    list += ChatColor.GREEN + warp.getName() + ChatColor.RESET + ".";
                     continue;
                 }
-                list += warp.getName() + ", ";
+                list += ChatColor.GREEN + warp.getName() + ChatColor.RESET + ", ";
             }
         }
         if (warpType == WarpType.Group) {

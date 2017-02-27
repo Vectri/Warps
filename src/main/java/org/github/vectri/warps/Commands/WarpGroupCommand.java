@@ -54,11 +54,13 @@ public class WarpGroupCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You must specify a player to add or remove.");
             return false;
         }
-        if (!WarpHandler.exists(WarpType.Group, args[0])) {
+        Player player = (Player) sender;
+        UUID playerUUID = player.getUniqueId();
+        if (!WarpHandler.exists(WarpType.Group, args[0], playerUUID)) {
             sender.sendMessage(ChatColor.RED + "Warp " + args[0] + " does not exist or is not a group warp.");
             return true;
         }
-        WarpGroup warpGroup = WarpHandler.get(args[0]);
+        WarpGroup warpGroup = WarpHandler.get(args[0], playerUUID);
         ArrayList<UUID> members = warpGroup.getMembers();
         if (mode == 2) {
             String memberList = "List of members in " + warpGroup.getName() + ": ";
@@ -77,9 +79,9 @@ public class WarpGroupCommand implements CommandExecutor {
             return true;
         }
         UUID targetUUID = null;
-        for (OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-            if (player.getName().equalsIgnoreCase(args[2])) {
-                targetUUID = player.getUniqueId();
+        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+            if (offlinePlayer.getName().equalsIgnoreCase(args[2])) {
+                targetUUID = offlinePlayer.getUniqueId();
             }
         }
         if (targetUUID == null) {
@@ -95,6 +97,7 @@ public class WarpGroupCommand implements CommandExecutor {
             }
             warpGroup.addMember(targetUUID);
             sender.sendMessage(ChatColor.GREEN + args[2] + " was successfully added as a member of " + warpGroup.getName() + "!");
+            sender.sendMessage(args[2] + " can use " + ChatColor.GREEN + "/warp g "+ sender.getName() + " " + warpGroup.getName() + ChatColor.RESET + " to use your warp!");
             return true;
         }
         if (mode == 1) {
